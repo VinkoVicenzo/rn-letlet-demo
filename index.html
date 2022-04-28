@@ -9,12 +9,14 @@
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
       integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
-      crossorigin="" />
+      crossorigin=""
+    />
 
     <script
       src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
       integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
-      crossorigin=""></script>
+      crossorigin=""
+    ></script>
 
     <title>Demo</title>
   </head>
@@ -30,70 +32,101 @@
 
     <script>
       let config = {
-        minZoom: 7,
-        maxZoom: 18,
+        minZoom: 17,
+        maxZoom: 19,
       };
       // magnification with which the map will start
-      const zoom = 13;
+      const zoom = 18;
       // co-ordinates
-      const lat = -23.5913636;
-      const lng = -46.6897659;
+      const lat = -23.598766098947618;
+      const lng = -46.69850146577267;
 
       // calling map
-      const map = L.map('map', config).setView([lat, lng], zoom);
+      const map = L.map("map", config).setView([lat, lng], zoom);
 
       // Used to load and display tile layers on the map
       // Most tile servers require attribution, which you can set under `Layer`
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution:
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          maxZoom: 19
       }).addTo(map);
 
       //
-      const River = L.polygon([
-        [52.261433597272294, 21.01272583007813],
-        [52.259857564663236, 21.008262634277347],
-        [52.2485084763669, 21.019763946533207],
-        [52.24377883252849, 21.026287078857425],
-        [52.240835688576325, 21.032123565673828],
-        [52.235474460511696, 21.037960052490238],
-        [52.22800971166361, 21.04465484619141],
-        [52.2249603686772, 21.047916412353516],
-        [52.23600009974023, 21.042766571044925],
-        [52.24966453484508, 21.023368835449222],
-        [52.26132853017426, 21.01272583007813],
-      ]);
 
-      const Place = L.polygon(
-        [
-          [52.23295130556395, 20.998821258544925],
-          [52.230007443518716, 20.98474502563477],
-          [52.224750061441355, 20.98920822143555],
-          [52.22769427210073, 21.002597808837894],
-        ],
-        {
-          color: 'red',
-          className: 'place',
-        },
-      );
-
-      // Extended `LayerGroup` that makes it easy
-      // to do the same for all layers of its members
-      const river = new L.FeatureGroup();
-      const place = new L.FeatureGroup();
-
-      // adding polugons to the map
-      river.addLayer(River);
-      place.addLayer(Place);
+      function getLocation(coords) {
+        const Location = L.polygon(coords);
+        const location = new L.FeatureGroup();
+        location.addLayer(Location);
+        return location;
+      }
 
       // object with layers
       const overlayMaps = {
-        River: river,
-        Place: place,
+        Ipês: getLocation([
+          [-23.597994316234146, -46.69796575232012],
+          [-23.598176201741257, -46.697971119007164],
+          [-23.598171285920063, -46.69775645152579],
+          [-23.598004147889625, -46.69775645152579],
+        ]),
+        Limantos: getLocation([
+          [-23.598363002810338, -46.698132233068414],
+          [-23.59863337230752, -46.698142594325745],
+          [-23.59863828811139, -46.697922560157345],
+          [-23.598372834438184, -46.697906460096235],
+        ]),
+        Jabuticabeiras: getLocation([
+          [-23.598038558678017, -46.69858830616814],
+          [-23.59834825536718, -46.69859903954221],
+          [-23.598363002810338, -46.698400472121946],
+          [-23.59805330615599, -46.698389722864846],
+        ]),
+        Tuias: getLocation([
+          [-23.598181117562273, -46.69914642346768],
+          [-23.59850556134195, -46.69915179015471],
+          [-23.598515392959108, -46.69895858942148],
+          [-23.598190949203747, -46.69894248936038],
+        ]),
+        Manacas: getLocation([
+          [-23.598702193545076, -46.699344990887944],
+          [-23.598879162275832, -46.699344990887944],
+          [-23.598898825453404, -46.69906592316216],
+          [-23.59871694094842, -46.699055189788105],
+        ]),
+        Zineas: getLocation([
+          [-23.59881034113114, -46.69829309980818],
+          [-23.598943067592145, -46.69829309980818],
+          [-23.598943067592145, -46.69806769895274],
+          [-23.59882017272544, -46.69805175772195],
+        ]),
+        Resedá: getLocation([
+          [-23.599129867568983, -46.698330816371715],
+          [-23.59928717260626, -46.698330816371715],
+          [-23.599297004164836, -46.6980785820811],
+          [-23.59913969913934, -46.698067848707026],
+        ]),
+        Magnólia: getLocation([
+          [-23.59940023548527, -46.698202015882906],
+          [-23.599680434374015, -46.69821274925697],
+          [-23.59969026590309, -46.6979819817145],
+          [-23.59941498281013, -46.69796588165339],
+        ]),
+        Bergônias: getLocation([
+          [-23.599847570268228, -46.698073235815116],
+          [-23.600054031961108, -46.698073235815116],
+          [-23.60005894771173, -46.69784246827263],
+          [-23.599847570268228, -46.697837101585606],
+        ]),
+        Shopping: getLocation([
+          [-23.59835808699614, -46.69772953867546],
+          [-23.59969026590309, -46.697788572232845],
+          [-23.599714844722584, -46.69741827082746],
+          [-23.598367918624355, -46.697348503896045],
+        ]),
       };
 
       // centering a group of markers
-      map.on('layeradd', function () {
+      map.on("layeradd", function () {
         // Create new empty bounds
         let bounds = new L.LatLngBounds();
         map.eachLayer(function (layer) {
@@ -122,36 +155,56 @@
           return this._container;
         },
         _removePolygons: function () {
-          this.createButton('remove', 'Remove all polygons');
+          this.createButton("remove", "Remove all polygons");
         },
         createButton: function (type, className) {
           const elements = this._container.getElementsByClassName(
-            'leaflet-control-layers-list',
+            "leaflet-control-layers-list"
           );
           const button = L.DomUtil.create(
-            'button',
+            "button",
             `btn-markers ${className}`,
-            elements[0],
+            elements[0]
           );
           button.textContent = className;
 
-          L.DomEvent.on(button, 'click', function (e) {
+          L.DomEvent.on(button, "click", function (e) {
             const checkbox = document.querySelectorAll(
-              '.leaflet-control-layers-overlays input[type=checkbox]',
+              ".leaflet-control-layers-overlays input[type=checkbox]"
             );
 
             // Remove/add all layer from map when click on button
-            [].slice.call(checkbox).map(el => {
-              el.checked = type === 'add' ? false : true;
+            [].slice.call(checkbox).map((el) => {
+              el.checked = type === "add" ? false : true;
               el.click();
             });
           });
         },
       });
 
-      new L.Control.CustomButtons(null, overlayMaps, {collapsed: false}).addTo(
-        map,
-      );
+      new L.Control.CustomButtons(null, overlayMaps, {
+        collapsed: false,
+      }).addTo(map);
+
+      var latitude, long;
+
+      let coords = [];
+      function getArray(lat, long) {
+        coords.push([lat, long]);
+        if (coords.length >= 4) {
+          console.log(JSON.stringify(coords));
+          coords = [];
+        }
+      }
+
+      map.addEventListener("mousemove", function (ev) {
+        latitude = ev.latlng.lat;
+        long = ev.latlng.lng;
+      });
+
+      map.addEventListener("contextmenu", () => {
+        getArray(latitude, long);
+      });
     </script>
   </body>
 </html>
