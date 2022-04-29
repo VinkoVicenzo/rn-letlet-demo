@@ -4,214 +4,30 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+    <!-- Leaflet -->
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
       integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
       crossorigin=""
     />
-
     <script
       src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
       integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
       crossorigin=""
     ></script>
-
-    <title>Demo</title>
+    <!-- /Leaflet -->
+    <script defer src="./script/main.js"></script>
+    <title>Shopping Indoor</title>
+    <link rel="stylesheet" href="./style/main.css" />
   </head>
-
-  <style>
-    #map {
-      height: 100vh;
-    }
-  </style>
-
   <body>
     <div id="map"></div>
-
-    <script>
-      let config = {
-        minZoom: 17,
-        maxZoom: 19,
-      };
-      // magnification with which the map will start
-      const zoom = 18;
-      // co-ordinates
-      const lat = -23.598766098947618;
-      const lng = -46.69850146577267;
-
-      // calling map
-      const map = L.map("map", config).setView([lat, lng], zoom);
-
-      // Used to load and display tile layers on the map
-      // Most tile servers require attribution, which you can set under `Layer`
-      L.TileLayer.Kitten = L.TileLayer.extend({
-    getTileUrl: function(coords) {
-        return "https://shoppingparangaba.com.br/data/files/44/02/D5/AF/BF0767105619E667A51BF9C2/L2.jpg";
-    },
-    });
-
-    L.tileLayer.kitten = function() {
-        return new L.TileLayer.Kitten();
-    }
-
-    L.tileLayer.kitten().addTo(map);
-
-
-      //
-
-      function getLocation(coords) {
-        const Location = L.polygon(coords);
-        const location = new L.FeatureGroup();
-        location.addLayer(Location);
-        return location;
-      }
-
-      // object with layers
-      const overlayMaps = {
-        Ipês: getLocation([
-          [-23.597994316234146, -46.69796575232012],
-          [-23.598176201741257, -46.697971119007164],
-          [-23.598171285920063, -46.69775645152579],
-          [-23.598004147889625, -46.69775645152579],
-        ]),
-        Limantos: getLocation([
-          [-23.598363002810338, -46.698132233068414],
-          [-23.59863337230752, -46.698142594325745],
-          [-23.59863828811139, -46.697922560157345],
-          [-23.598372834438184, -46.697906460096235],
-        ]),
-        Jabuticabeiras: getLocation([
-          [-23.598038558678017, -46.69858830616814],
-          [-23.59834825536718, -46.69859903954221],
-          [-23.598363002810338, -46.698400472121946],
-          [-23.59805330615599, -46.698389722864846],
-        ]),
-        Tuias: getLocation([
-          [-23.598181117562273, -46.69914642346768],
-          [-23.59850556134195, -46.69915179015471],
-          [-23.598515392959108, -46.69895858942148],
-          [-23.598190949203747, -46.69894248936038],
-        ]),
-        Manacas: getLocation([
-          [-23.598702193545076, -46.699344990887944],
-          [-23.598879162275832, -46.699344990887944],
-          [-23.598898825453404, -46.69906592316216],
-          [-23.59871694094842, -46.699055189788105],
-        ]),
-        Zineas: getLocation([
-          [-23.59881034113114, -46.69829309980818],
-          [-23.598943067592145, -46.69829309980818],
-          [-23.598943067592145, -46.69806769895274],
-          [-23.59882017272544, -46.69805175772195],
-        ]),
-        Resedá: getLocation([
-          [-23.599129867568983, -46.698330816371715],
-          [-23.59928717260626, -46.698330816371715],
-          [-23.599297004164836, -46.6980785820811],
-          [-23.59913969913934, -46.698067848707026],
-        ]),
-        Magnólia: getLocation([
-          [-23.59940023548527, -46.698202015882906],
-          [-23.599680434374015, -46.69821274925697],
-          [-23.59969026590309, -46.6979819817145],
-          [-23.59941498281013, -46.69796588165339],
-        ]),
-        Bergônias: getLocation([
-          [-23.599847570268228, -46.698073235815116],
-          [-23.600054031961108, -46.698073235815116],
-          [-23.60005894771173, -46.69784246827263],
-          [-23.599847570268228, -46.697837101585606],
-        ]),
-        Shopping: getLocation([
-          [-23.59835808699614, -46.69772953867546],
-          [-23.59969026590309, -46.697788572232845],
-          [-23.599714844722584, -46.69741827082746],
-          [-23.598367918624355, -46.697348503896045],
-        ]),
-      };
-
-      // centering a group of markers
-      map.on("layeradd", function () {
-        // Create new empty bounds
-        let bounds = new L.LatLngBounds();
-        map.eachLayer(function (layer) {
-          // Check if layer is a featuregroup
-          if (layer instanceof L.FeatureGroup) {
-            // Extend bounds with group's bounds
-            bounds.extend(layer.getBounds());
-          }
-        });
-
-        // Check if bounds are valid (could be empty)
-        if (bounds.isValid()) {
-          // Valid, fit bounds
-          map.flyToBounds(bounds);
-        } else {
-          // Invalid, fit world
-          // map.fitWorld();
-        }
-      });
-
-      L.Control.CustomButtons = L.Control.Layers.extend({
-        onAdd: function () {
-          this._initLayout();
-          this._removePolygons();
-          this._update();
-          return this._container;
-        },
-        _removePolygons: function () {
-          this.createButton("remove", "Remove all polygons");
-        },
-        createButton: function (type, className) {
-          const elements = this._container.getElementsByClassName(
-            "leaflet-control-layers-list"
-          );
-          const button = L.DomUtil.create(
-            "button",
-            `btn-markers ${className}`,
-            elements[0]
-          );
-          button.textContent = className;
-
-          L.DomEvent.on(button, "click", function (e) {
-            const checkbox = document.querySelectorAll(
-              ".leaflet-control-layers-overlays input[type=checkbox]"
-            );
-
-            // Remove/add all layer from map when click on button
-            [].slice.call(checkbox).map((el) => {
-              el.checked = type === "add" ? false : true;
-              el.click();
-            });
-          });
-        },
-      });
-
-      new L.Control.CustomButtons(null, overlayMaps, {
-        collapsed: false,
-      }).addTo(map);
-
-      var latitude, long;
-
-      let coords = [];
-      function getArray(lat, long) {
-        coords.push([lat, long]);
-        if (coords.length >= 4) {
-          console.log(JSON.stringify(coords));
-          coords = [];
-        }
-      }
-
-      map.addEventListener("mousemove", function (ev) {
-        latitude = ev.latlng.lat;
-        long = ev.latlng.lng;
-      });
-
-      map.addEventListener("contextmenu", () => {
-        getArray(latitude, long);
-      });
-    </script>
+    <div id="floor-layers">
+      <form>
+        <button id="floor-1-btn">1</button>
+        <button id="floor-2-btn">2</button>
+      </form>
+    </div>
   </body>
 </html>

@@ -1,0 +1,28 @@
+* {
+  font-family: Arial, Helvetica, sans-serif ;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#map {
+  height: 100vh;
+}
+
+#floor-layers  {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  z-index: 800;
+}
+
+#floor-layers  form{
+  display: flex;
+  column-gap: 10px;
+}
+
+#floor-layers  form button{
+  padding: 10px 
+}
