@@ -247,6 +247,11 @@ function setFloorLayer(map, floorNumber) {
 
   // Map Layers
 
+  const layersContainer = document.querySelector(
+    "div.leaflet-top:nth-child(2)"
+  );
+  layersContainer.textContent = "";
+
   function getLocation(coords) {
     const Location = L.polygon(coords);
     const location = new L.FeatureGroup();
