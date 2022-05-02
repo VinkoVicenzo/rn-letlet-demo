@@ -247,6 +247,9 @@ function setFloorLayer(map, floorNumber) {
 
   // Map Layers
 
+  const layersListRemoveButton = document.querySelector(".btn-markers");
+  layersListRemoveButton?.click();
+
   const layersContainer = document.querySelector(
     "div.leaflet-top:nth-child(2)"
   );
