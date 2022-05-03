@@ -360,10 +360,10 @@ function setFloorLayer(map, floorNumber) {
 }
 
 const map = L.map("map", {
-  minZoom: 19 - 4,
+  minZoom: 19 - 6,
   maxZoom: 19,
   center: [0, 0],
-  zoom: 19 - 4,
+  zoom: 19 - 3,
   crs: L.CRS.Simple,
 });
 
