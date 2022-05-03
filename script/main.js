@@ -11,9 +11,13 @@ floorTwoBtn.addEventListener("click", (e) => {
   setFloorLayer(map, 1);
 });
 
+const activeMarkers = [];
+
 function setFloorLayer(map, floorNumber) {
   const floors = [
     {
+      imageURL:
+        "https://shoppingparangaba.com.br/data/files/44/02/D5/AF/BF0767105619E667A51BF9C2/L2.jpg",
       storesMap: [
         {
           name: "Casas Bahia",
@@ -131,10 +135,24 @@ function setFloorLayer(map, floorNumber) {
           ],
         },
       ],
-      imageURL:
-        "https://shoppingparangaba.com.br/data/files/44/02/D5/AF/BF0767105619E667A51BF9C2/L2.jpg",
+      markers: [
+        {
+          name: "Banheiro",
+          coord: [-0.0122833251953125, 0.0115814208984375],
+        },
+        {
+          name: "Escada Rolante",
+          coord: [-0.0075531005859375, 0.0080718994140625],
+        },
+        {
+          name: "Praça de alimentação",
+          coord: [-0.00684356689453125, 0.0135345458984375],
+        },
+      ],
     },
     {
+      imageURL:
+        "https://shoppingdabahia.com.br/data/files/75/E5/CE/AE/CC616610329C4F5653DBF9C2/bahia_1andar.jpg",
       storesMap: [
         {
           name: "Lojas Americanas",
@@ -225,12 +243,17 @@ function setFloorLayer(map, floorNumber) {
           ],
         },
       ],
-      imageURL:
-        "https://shoppingdabahia.com.br/data/files/75/E5/CE/AE/CC616610329C4F5653DBF9C2/bahia_1andar.jpg",
+      markers: [
+        { name: "Banheiro", coord: [-0.007232666015625, 0.0069427490234375] },
+        { name: "Escada", coord: [-0.0068359375, 0.0115203857421875] },
+        { name: "Lixeira", coord: [-0.0026092529296875, 0.0095672607421875] },
+      ],
     },
   ];
 
-  const { storesMap, imageURL } =
+  // const andar = floors.findIndex((obj) => obj.storesMap.some("Renner")) + 1
+
+  const { storesMap, imageURL, markers } =
     floors[floorNumber] ?? console.error(`Floor ${floorNumber} dont exist`);
 
   // Map Image
@@ -326,13 +349,21 @@ function setFloorLayer(map, floorNumber) {
   new L.Control.CustomButtons(null, overlayMaps, {
     collapsed: false,
   }).addTo(map);
+
+  // Markers
+
+  activeMarkers.forEach((marker) => marker.removeFrom(map));
+
+  markers.forEach(({ coord, name }) =>
+    activeMarkers.push(new L.Marker(coord).addTo(map).bindPopup(name))
+  );
 }
 
 const map = L.map("map", {
-  minZoom: 19 - 6,
+  minZoom: 19 - 4,
   maxZoom: 19,
   center: [0, 0],
-  zoom: 19 - 3,
+  zoom: 19 - 4,
   crs: L.CRS.Simple,
 });
 
@@ -345,10 +376,10 @@ function getArray(lat, lng) {
   coords.push([lat, lng]);
   if (coords.length >= sides) {
     const name = prompt("nome: ");
-    console.log(JSON.stringify(coords));
     final.push({ name, coords });
     coords = [];
     sides = 0;
+    console.log(JSON.stringify(final));
   }
 }
 
