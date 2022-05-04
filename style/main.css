@@ -1,28 +1,6 @@
-* {
-  font-family: Arial, Helvetica, sans-serif ;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+@import url(https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css);
 
 #map {
+  cursor: default;
   height: 100vh;
-}
-
-#floor-layers  {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  margin-bottom: 10px;
-  margin-left: 10px;
-  z-index: 800;
-}
-
-#floor-layers  form{
-  display: flex;
-  column-gap: 10px;
-}
-
-#floor-layers  form button{
-  padding: 10px 
 }
