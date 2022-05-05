@@ -1,11 +1,11 @@
+let currentImageOverlay;
+let current;
+
 function isOpen({ close, open }) {
   const currentDate = new Date();
   const currentTime = currentDate.getHours() * 60 + currentDate.getMinutes();
   return open <= currentTime && currentTime < close;
 }
-
-const URL =
-  "https://shoppingparangaba.com.br/data/files/44/02/D5/AF/BF0767105619E667A51BF9C2/L2.jpg";
 
 var map = L.map("map", {
   minZoom: 7,
@@ -14,41 +14,6 @@ var map = L.map("map", {
   zoom: 10,
   crs: L.CRS.Simple,
 });
-
-var southWest = map.unproject([0, 896]);
-var northEast = map.unproject([824, 0]);
-var bounds = new L.LatLngBounds(southWest, northEast);
-
-L.imageOverlay(URL, bounds).addTo(map);
-
-// // let sides = 0;
-// // let coords = [];
-
-// // function getArray(lng, lat) {
-// //   coords.push([lng, lat]);
-// //   if (coords.length >= sides) {
-// //     const name = prompt("nome: ");
-// //     const feature = {
-// //       type: "Feature",
-// //       id: `${statesData.features.length + 1}`,
-// //       properties: { name, aberto: true },
-// //       geometry: {
-// //         type: "Polygon",
-// //         coordinates: [coords],
-// //       },
-// //     };
-// //     coords = [];
-// //     sides = 0;
-// //     console.log(JSON.stringify(feature));
-// //   }
-// // }
-
-// // map.addEventListener("contextmenu", ({ latlng: { lat, lng } }) => {
-// //   if (!sides) {
-// //     sides = prompt("vertices: ");
-// //   }
-// //   getArray(lng, lat); // Invertido, pois é assim no geoJSON
-// // });
 
 // control that shows state info on hover
 var info = L.control();
@@ -67,56 +32,80 @@ info.update = function (props) {
 
 info.addTo(map);
 
-function getOpenColor(openTime) {
-  return isOpen(openTime) ? "#0f0" : "#f00";
-}
-
-function style(feature) {
-  return {
-    opacity: 0,
-    fillOpacity: 0,
-  };
-}
-
-function highlightFeature(e) {
-  const layer = e.target;
-  const openColor = getOpenColor(layer.feature.properties.openTime);
-  layer.setStyle({
-    weight: 1,
-    opacity: 1,
-    color: openColor,
-    fillColor: openColor,
-    fillOpacity: 0.4,
+function getImageSize(imageUrl) {
+  return new Promise((resolve) => {
+    const image = new Image();
+    image.src = imageUrl;
+    image.onload = () =>
+      resolve({
+        width: image.width,
+        height: image.height,
+      });
   });
+}
 
-  if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-    layer.bringToFront();
+async function setFloor(imageUrl, featureCollection) {
+  map.eachLayer((layer) => layer.removeFrom(map));
+
+  const { width, height } = await getImageSize(imageUrl);
+
+  const southWest = [0, 1];
+  const northEast = [(1 * height) / width, 0];
+  const bounds = new L.LatLngBounds(southWest, northEast);
+
+  const floorImageOverlay = L.imageOverlay(imageUrl, bounds);
+
+  function getOpenColor(openTime) {
+    return isOpen(openTime) ? "#0f0" : "#f00";
   }
 
-  info.update(layer.feature.properties.name);
-}
+  function zoomToFeature(e) {
+    map.fitBounds(e.target.getBounds());
+  }
 
-var geojson;
+  function resetHighlight(e) {
+    geojson.resetStyle(e.target);
+    info.update();
+  }
 
-function resetHighlight(e) {
-  geojson.resetStyle(e.target);
-  info.update();
-}
+  function highlightFeature(e) {
+    const layer = e.target;
+    const openColor = getOpenColor(layer.feature.properties.openTime);
+    layer.setStyle({
+      weight: 1,
+      opacity: 1,
+      color: openColor,
+      fillColor: openColor,
+      fillOpacity: 0.4,
+    });
 
-function zoomToFeature(e) {
-  map.fitBounds(e.target.getBounds());
-}
+    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+      layer.bringToFront();
+    }
 
-function onEachFeature(feature, layer) {
-  layer.on({
-    mouseover: highlightFeature,
-    mouseout: resetHighlight,
-    click: zoomToFeature,
+    info.update(layer.feature.properties.name);
+  }
+
+  function onEachFeature(feature, layer) {
+    layer.on({
+      mouseover: highlightFeature,
+      mouseout: resetHighlight,
+      click: zoomToFeature,
+    });
+  }
+
+  function style(feature) {
+    return {
+      opacity: 0,
+      fillOpacity: 0,
+    };
+  }
+
+  const geojson = L.geoJson(featureCollection, {
+    style,
+    onEachFeature,
   });
-}
 
-/* global statesData */
-geojson = L.geoJson(locationsData, {
-  style: style,
-  onEachFeature: onEachFeature,
-}).addTo(map);
+  floorImageOverlay.addTo(map);
+  geojson.addTo(map);
+}
