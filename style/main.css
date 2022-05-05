@@ -4,3 +4,9 @@
   cursor: default;
   height: 100vh;
 }
+
+.info {
+  background-color: white;
+  text-align: center;
+  width: 20vw;
+}
