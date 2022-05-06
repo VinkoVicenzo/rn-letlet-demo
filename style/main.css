@@ -31,3 +31,7 @@ form button {
   height: 1000%;
   border: solid 1px;
 }
+
+.active-button {
+  background-color: green;
+}
