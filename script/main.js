@@ -4,19 +4,24 @@ let current;
 const floorOneBtn = document.getElementById("floor-1-btn");
 const floorTwoBtn = document.getElementById("floor-2-btn");
 
-
 floorOneBtn.addEventListener("click", (e) => {
   e.preventDefault();
   floorTwoBtn.style.backgroundColor = "";
   floorOneBtn.style.backgroundColor = "green";
-  setFloor("https://shoppingparangaba.com.br/data/files/44/02/D5/AF/BF0767105619E667A51BF9C2/L2.jpg", locationsData[0]);
+  setFloor(
+    "https://shoppingparangaba.com.br/data/files/44/02/D5/AF/BF0767105619E667A51BF9C2/L2.jpg",
+    locationsData[0]
+  );
 });
 
 floorTwoBtn.addEventListener("click", (e) => {
   e.preventDefault();
   floorOneBtn.style.backgroundColor = "";
   floorTwoBtn.style.backgroundColor = "green";
-  setFloor("https://shoppingdabahia.com.br/data/files/75/E5/CE/AE/CC616610329C4F5653DBF9C2/bahia_1andar.jpg", locationsData[1]);
+  setFloor(
+    "https://shoppingdabahia.com.br/data/files/75/E5/CE/AE/CC616610329C4F5653DBF9C2/bahia_1andar.jpg",
+    locationsData[1]
+  );
 });
 
 function isOpen({ close, open }) {
@@ -45,7 +50,7 @@ info.onAdd = function (map) {
 info.update = function (props) {
   this._div.innerHTML =
     "<h4>Loja selecionada: </h4>" +
-    (props ? "<b>" + props + "</b>": "Selecione uma loja.");
+    (props ? "<b>" + props + "</b>" : "Selecione uma loja.");
 };
 
 info.addTo(map);
@@ -126,4 +131,6 @@ async function setFloor(imageUrl, featureCollection) {
 
   floorImageOverlay.addTo(map);
   geojson.addTo(map);
+
+  map.flyTo(floorImageOverlay.getCenter());
 }
