@@ -105,7 +105,17 @@ async function setFloor(imageUrl, featureCollection) {
   }
 
   function zoomToFeature(e) {
-    map.fitBounds(e.target.getBounds());
+    const {
+      _northEast: { lat: neLat, lng: neLng },
+      _southWest: { lat: swLat, lng: swLng },
+    } = e.target.getBounds();
+    const bounds = new L.LatLngBounds([
+      [neLat, neLng].map((c) => c * 1.1),
+      [swLat, swLng].map((c) => c / 1.1),
+    ]);
+
+    map.fitBounds(bounds);
+    console.log(bounds);
   }
 
   function resetHighlight(e) {
