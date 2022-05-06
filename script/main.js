@@ -1,6 +1,8 @@
 let currentImageOverlay;
 let current;
 
+let currentFloor = "nenhum";
+
 const floorOneBtn = document.getElementById("floor-1-btn");
 const floorTwoBtn = document.getElementById("floor-2-btn");
 
@@ -12,6 +14,7 @@ floorOneBtn.addEventListener("click", (e) => {
     "https://shoppingparangaba.com.br/data/files/44/02/D5/AF/BF0767105619E667A51BF9C2/L2.jpg",
     locationsData[0]
   );
+  currentFloor = "Primeiro";
 });
 
 floorTwoBtn.addEventListener("click", (e) => {
@@ -22,12 +25,19 @@ floorTwoBtn.addEventListener("click", (e) => {
     "https://shoppingdabahia.com.br/data/files/75/E5/CE/AE/CC616610329C4F5653DBF9C2/bahia_1andar.jpg",
     locationsData[1]
   );
+  currentFloor = "Segundo";
 });
 
 function isOpen({ close, open }) {
   const currentDate = new Date();
   const currentTime = currentDate.getHours() * 60 + currentDate.getMinutes();
   return open <= currentTime && currentTime < close;
+}
+
+function minutesToHoursMinutes(rawMinutes) {
+  const hours = Math.floor(rawMinutes / 60);
+  const minutes = rawMinutes % 60;
+  return `${hours}:${minutes}`;
 }
 
 var map = L.map("map", {
@@ -47,10 +57,22 @@ info.onAdd = function (map) {
   return this._div;
 };
 
-info.update = function (props) {
-  this._div.innerHTML =
-    "<h4>Loja selecionada: </h4>" +
-    (props ? "<b>" + props + "</b>" : "Selecione uma loja.");
+function infoDisplay(name, openTime, floorLevel) {
+  if (!name) return "<h3>Selecione uma loja</h3>";
+
+  const floorText = `<h3>${floorLevel} andar</h3>`;
+  const storeText = `<h3>${name}</h3>`;
+  const openTimeText = `<h3>${
+    isOpen(openTime)
+      ? `Aberto</h3><h3>Fecha as ${minutesToHoursMinutes(openTime.close)}</h3>`
+      : `Fechado</h3><h3>Abre as ${minutesToHoursMinutes(openTime.open)}</h3>`
+  }`;
+
+  return floorText + storeText + openTimeText;
+}
+
+info.update = function (name, openTime) {
+  this._div.innerHTML = infoDisplay(name, openTime, currentFloor) ?? "Teste";
 };
 
 info.addTo(map);
@@ -106,7 +128,10 @@ async function setFloor(imageUrl, featureCollection) {
       layer.bringToFront();
     }
 
-    info.update(layer.feature.properties.name);
+    info.update(
+      layer.feature.properties.name,
+      layer.feature.properties.openTime
+    );
   }
 
   function onEachFeature(feature, layer) {
