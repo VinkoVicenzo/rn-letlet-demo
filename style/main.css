@@ -21,7 +21,13 @@
   z-index: 800;
 }
 
+form {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
 form button {
-  width: 8vw;
-  height: 4vw;
+  width: 14vw; 
+  height: 10vw;
+  border: solid 1px;
 }
