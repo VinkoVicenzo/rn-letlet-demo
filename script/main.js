@@ -1,32 +1,4 @@
-let currentImageOverlay;
-let current;
-
 let currentFloor = "nenhum";
-
-const floorOneBtn = document.getElementById("floor-1-btn");
-const floorTwoBtn = document.getElementById("floor-2-btn");
-
-floorOneBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  floorTwoBtn.style.backgroundColor = "";
-  floorOneBtn.style.backgroundColor = "green";
-  setFloor(
-    "https://shoppingparangaba.com.br/data/files/44/02/D5/AF/BF0767105619E667A51BF9C2/L2.jpg",
-    locationsData[0]
-  );
-  currentFloor = "Primeiro";
-});
-
-floorTwoBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  floorOneBtn.style.backgroundColor = "";
-  floorTwoBtn.style.backgroundColor = "green";
-  setFloor(
-    "https://shoppingdabahia.com.br/data/files/75/E5/CE/AE/CC616610329C4F5653DBF9C2/bahia_1andar.jpg",
-    locationsData[1]
-  );
-  currentFloor = "Segundo";
-});
 
 function isOpen({ close, open }) {
   const currentDate = new Date();
@@ -60,7 +32,7 @@ info.onAdd = function (map) {
 function infoDisplay(name, openTime, floorLevel) {
   if (!name) return "<h3>Selecione uma loja</h3>";
 
-  const floorText = `<h3>${floorLevel} andar</h3>`;
+  const floorText = `<h3>Andar atual: ${floorLevel} </h3>`;
   const storeText = `<h3>${name}</h3>`;
   const openTimeText = `<h3>${
     isOpen(openTime)
@@ -168,4 +140,23 @@ async function setFloor(imageUrl, featureCollection) {
   geojson.addTo(map);
 
   map.flyTo(floorImageOverlay.getCenter());
+}
+
+const buttonContainer = document.querySelector("#button-container");
+for (let i in locationsData) {
+  const floorNumber = Number(i) + 1;
+  const button = document.createElement("button");
+  button.id = `floor-${floorNumber}-btn`;
+  button.textContent = floorNumber;
+  button.addEventListener("click", (e) => {
+    e.preventDefault();
+    for (let i = 0; i < buttonContainer.children.length; i++) {
+      const child = buttonContainer.children[i];
+      child.classList.remove("active-button");
+    }
+    button.classList.add("active-button");
+    currentFloor = floorNumber;
+    setFloor(locationsData[i].image, locationsData[i]);
+  });
+  buttonContainer.appendChild(button);
 }
