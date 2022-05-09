@@ -26,12 +26,12 @@ form {
   flex-direction: column-reverse;
 }
 
-form button {
-  width: 100%;
-  height: 1000%;
-  border: solid 1px;
-}
-
 .active-button {
   background-color: green;
+}
+
+form button{
+  width: 60px;
+  height: 40px;
+  border: 1px solid black;
 }
