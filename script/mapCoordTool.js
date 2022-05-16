@@ -61,7 +61,5 @@ document.addEventListener("keydown", ({ key }) => {
     c: () => navigator.clipboard.writeText(JSON.stringify(mapper.lastFeature)),
     a: () => navigator.clipboard.writeText(JSON.stringify(mapper.features)),
   };
-  if (key in action) {
-    action[key]();
-  }
+  action[key]?.();
 });
