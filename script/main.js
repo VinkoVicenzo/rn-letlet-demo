@@ -118,18 +118,18 @@ async function setFloor(imageUrl, featureCollection) {
     );
   }
 
+  function addMarker(e) {
+    const center = e.target.getCenter();
+    const marker = new L.marker(center);
+    marker.addTo(map);
+  }
+
   function onEachFeature(feature, layer) {
     layer.on({
       mouseover: highlightFeature,
       mouseout: resetHighlight,
       click: zoomToFeature,
-      add: (e) => {
-        // Se o local não tiver nome ("") um marcado será adicionado
-        if (feature.properties.name) return;
-        const center = e.target.getCenter();
-        const marker = new L.marker(center);
-        marker.addTo(map);
-      },
+      add: addMarker,
     });
   }
 
