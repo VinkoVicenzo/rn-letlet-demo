@@ -1,3 +1,5 @@
+const DEFAULT_ZOOM_LEVEL = 9;
+
 let currentFloor = "nenhum";
 
 function isOpen({ close, open }) {
@@ -13,10 +15,10 @@ function minutesToHoursMinutes(rawMinutes) {
 }
 
 var map = L.map("map", {
-  minZoom: 7,
+  minZoom: 8,
   maxZoom: 13,
   center: [-0.25, 0.25],
-  zoom: 10,
+  zoom: DEFAULT_ZOOM_LEVEL,
   crs: L.CRS.Simple,
 });
 
@@ -82,8 +84,8 @@ async function setFloor(imageUrl, featureCollection) {
       _southWest: { lat: swLat, lng: swLng },
     } = e.target.getBounds();
     const bounds = new L.LatLngBounds([
-      [neLat, neLng].map((c) => c * 1.1),
-      [swLat, swLng].map((c) => c / 1.1),
+      [neLat, neLng].map((c) => c + 0.025),
+      [swLat, swLng].map((c) => c - 0.025),
     ]);
 
     map.fitBounds(bounds);
@@ -139,7 +141,7 @@ async function setFloor(imageUrl, featureCollection) {
   floorImageOverlay.addTo(map);
   geojson.addTo(map);
 
-  map.flyTo(floorImageOverlay.getCenter());
+  map.flyTo(floorImageOverlay.getCenter(), DEFAULT_ZOOM_LEVEL);
 }
 
 const buttonContainer = document.querySelector("#button-container");
