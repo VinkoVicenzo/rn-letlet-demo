@@ -2,7 +2,7 @@ const locationsData = [
   {
     type: "FeatureCollection",
     image:
-      "https://raw.githubusercontent.com/VinkoVicenzo/rn-letlet-demo/development/assets/images/AZ_2019_Plantas_Wallig.jpg",
+      "assets/images/AZ_2019_Plantas_Wallig.jpg",
     features: [
       {
         type: "Feature",
@@ -344,7 +344,7 @@ const locationsData = [
   {
     type: "FeatureCollection",
     image:
-      "https://raw.githubusercontent.com/VinkoVicenzo/rn-letlet-demo/development/assets/images/AZ_2019_Plantas_Wallig2.jpg",
+      "assets/images/AZ_2019_Plantas_Wallig2.jpg",
     features: [
       {
         type: "Feature",
@@ -1274,7 +1274,7 @@ const locationsData = [
   {
     type: "FeatureCollection",
     image:
-      "https://raw.githubusercontent.com/VinkoVicenzo/rn-letlet-demo/development/assets/images/AZ_2019_Plantas_Wallig3.jpg",
+      "assets/images/AZ_2019_Plantas_Wallig3.jpg",
     features: [
       {
         type: "Feature",
