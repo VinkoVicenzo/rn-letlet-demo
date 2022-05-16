@@ -123,6 +123,13 @@ async function setFloor(imageUrl, featureCollection) {
       mouseover: highlightFeature,
       mouseout: resetHighlight,
       click: zoomToFeature,
+      add: (e) => {
+        // Se o local não tiver nome ("") um marcado será adicionado
+        if (feature.properties.name) return;
+        const center = e.target.getCenter();
+        const marker = new L.marker(center);
+        marker.addTo(map);
+      },
     });
   }
 
