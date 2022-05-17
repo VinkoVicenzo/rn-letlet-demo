@@ -66,16 +66,21 @@ async function setFloor(imageUrl, featureCollection) {
       _northEast: { lat: neLat, lng: neLng },
       _southWest: { lat: swLat, lng: swLng },
     } = e.target.getBounds();
+
     const bounds = new L.LatLngBounds([
       [neLat, neLng].map((c) => c + 0.025),
       [swLat, swLng].map((c) => c - 0.025),
     ]);
 
     map.fitBounds(bounds);
-    console.log(bounds);
 
-    const marker = e.target.feature.marker;
-    marker.openPopup();
+    // Mostra o popup após 0.25s
+    // Set timeout é necessário para
+    // não cortar a animação do fitBounds que dura 0.25s
+    setTimeout(() => {
+      const marker = e.target.feature.marker;
+      marker.openPopup();
+    }, 250);
   }
 
   function resetHighlight(e) {
