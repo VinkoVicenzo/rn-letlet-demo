@@ -1,4 +1,4 @@
-const DEFAULT_ZOOM_LEVEL = 8;
+const DEFAULT_ZOOM_LEVEL = 9;
 
 let currentFloor = "nenhum";
 
