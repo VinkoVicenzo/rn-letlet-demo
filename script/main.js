@@ -1,4 +1,4 @@
-const DEFAULT_ZOOM_LEVEL = 10;
+const DEFAULT_ZOOM_LEVEL = 8;
 
 let currentFloor = "nenhum";
 
@@ -15,7 +15,7 @@ function minutesToHoursMinutes(rawMinutes) {
 }
 
 var map = L.map("map", {
-  minZoom: 10,
+  minZoom: 9,
   maxZoom: 12,
   center: [-0.25, 0.25],
   zoom: DEFAULT_ZOOM_LEVEL,
@@ -46,7 +46,7 @@ function infoDisplay(name, openTime, floorLevel) {
 }
 
 info.update = function (name, openTime) {
-  this._div.innerHTML = infoDisplay(name, openTime, currentFloor) ?? "Teste";
+  // this._div.innerHTML = infoDisplay(name, openTime, currentFloor) ?? "Teste";
 };
 
 info.addTo(map);
@@ -118,9 +118,17 @@ async function setFloor(imageUrl, featureCollection) {
     );
   }
 
+
   function addMarker(e) {
     const center = e.target.getCenter();
     const marker = new L.marker(center);
+    marker.bindPopup(
+      infoDisplay(
+        e.target.feature.properties.name,
+        e.target.feature.properties.openTime,
+        currentFloor
+      )
+    );
     marker.addTo(map);
   }
 
