@@ -17,25 +17,14 @@ function minutesToHoursMinutes(rawMinutes) {
 var map = L.map("map", {
   minZoom: 9,
   maxZoom: 12,
-  center: [-0.25, 0.25],
+  center: [0, 0],
   zoom: DEFAULT_ZOOM_LEVEL,
   crs: L.CRS.Simple,
 });
 
-// control that shows state info on hover
-var info = L.control();
-
-info.onAdd = function (map) {
-  this._div = L.DomUtil.create("div", "info");
-  this.update();
-  return this._div;
-};
-
-function infoDisplay(name, openTime, floorLevel) {
-  if (!name) return "<h3>Selecione uma loja</h3>";
-
+function popupMessage(name, openTime, floorLevel) {
   const floorText = `<h3>Andar atual: ${floorLevel} </h3>`;
-  const storeText = `<h3>${name}</h3>`;
+  const storeText = `<h3>${name || "Loja sem nome"}</h3>`;
   const openTimeText = `<h3>${
     isOpen(openTime)
       ? `Aberto</h3><h3>Fecha as ${minutesToHoursMinutes(openTime.close)}</h3>`
@@ -44,12 +33,6 @@ function infoDisplay(name, openTime, floorLevel) {
 
   return floorText + storeText + openTimeText;
 }
-
-info.update = function (name, openTime) {
-  // this._div.innerHTML = infoDisplay(name, openTime, currentFloor) ?? "Teste";
-};
-
-info.addTo(map);
 
 function getImageSize(imageUrl) {
   return new Promise((resolve) => {
@@ -78,7 +61,7 @@ async function setFloor(imageUrl, featureCollection) {
     return isOpen(openTime) ? "#0f0" : "#f00";
   }
 
-  function zoomToFeature(e) {
+  function zoomToFeatureAndShowPopup(e) {
     const {
       _northEast: { lat: neLat, lng: neLng },
       _southWest: { lat: swLat, lng: swLng },
@@ -90,6 +73,9 @@ async function setFloor(imageUrl, featureCollection) {
 
     map.fitBounds(bounds);
     console.log(bounds);
+
+    const marker = e.target.feature.marker;
+    marker.openPopup();
   }
 
   function resetHighlight(e) {
@@ -118,25 +104,25 @@ async function setFloor(imageUrl, featureCollection) {
     );
   }
 
-
   function addMarker(e) {
     const center = e.target.getCenter();
     const marker = new L.marker(center);
     marker.bindPopup(
-      infoDisplay(
+      popupMessage(
         e.target.feature.properties.name,
         e.target.feature.properties.openTime,
         currentFloor
       )
     );
     marker.addTo(map);
+    e.target.feature.marker = marker;
   }
 
   function onEachFeature(feature, layer) {
     layer.on({
       mouseover: highlightFeature,
       mouseout: resetHighlight,
-      click: zoomToFeature,
+      click: zoomToFeatureAndShowPopup,
       add: addMarker,
     });
   }
