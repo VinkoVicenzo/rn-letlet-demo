@@ -1,4 +1,4 @@
-const DEFAULT_ZOOM_LEVEL = 9;
+const DEFAULT_ZOOM_LEVEL = 10;
 
 let currentFloor = "nenhum";
 
@@ -15,8 +15,8 @@ function minutesToHoursMinutes(rawMinutes) {
 }
 
 var map = L.map("map", {
-  minZoom: 8,
-  maxZoom: 13,
+  minZoom: 10,
+  maxZoom: 12,
   center: [-0.25, 0.25],
   zoom: DEFAULT_ZOOM_LEVEL,
   crs: L.CRS.Simple,
