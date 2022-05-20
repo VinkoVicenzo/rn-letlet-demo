@@ -43,6 +43,7 @@ form button{
 }
 
 #shopping-form{
+  z-index: 800;
   width: 200px;
   margin-right: 30px;
   margin-top: 10px;
