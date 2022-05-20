@@ -25,7 +25,7 @@ class Mapper {
   }
 
   _stopMapping() {
-    const name = prompt("Insira o nome da loja");
+    const name = "";
     const newFeature = Mapper.featureTemplate(name, [...this._coords]);
     this._features.push(newFeature);
   }
