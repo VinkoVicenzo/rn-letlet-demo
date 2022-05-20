@@ -106,7 +106,6 @@ async function setFloor(featureCollection) {
 
   function resetHighlight(e) {
     geojson.resetStyle(e.target);
-    info.update();
   }
 
   function highlightFeature(e) {
@@ -123,11 +122,6 @@ async function setFloor(featureCollection) {
     if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
       layer.bringToFront();
     }
-
-    info.update(
-      layer.feature.properties.name,
-      layer.feature.properties.openTime
-    );
   }
 
   function addMarker(e) {
