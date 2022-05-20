@@ -6,8 +6,9 @@ async function getSelectedShoppingId() {
 
   const { data } = await getShoppingDataByID(shopping_id);
   console.log(data);
-  locationsData = data;
-  setFloor(locationsData[0].image, locationsData[0])
+
+  setChangeFloorButtons(data);
+  setFloor(data[0]);
 }
 
 let getShoppingDataByID = async (shopping_id) => {
@@ -16,8 +17,6 @@ let getShoppingDataByID = async (shopping_id) => {
   const data = await response.json();
   return data;
 };
-
-let locationsData = [];
 
 const DEFAULT_ZOOM_LEVEL = 9;
 
@@ -67,7 +66,8 @@ function getImageSize(imageUrl) {
   });
 }
 
-async function setFloor(imageUrl, featureCollection) {
+async function setFloor(featureCollection) {
+  const { image: imageUrl } = featureCollection;
   map.eachLayer((layer) => layer.removeFrom(map));
 
   const { width, height } = await getImageSize(imageUrl);
@@ -169,8 +169,11 @@ async function setFloor(imageUrl, featureCollection) {
   geojson.addTo(map);
 
   map.flyTo(floorImageOverlay.getCenter(), DEFAULT_ZOOM_LEVEL);
+}
 
+function setChangeFloorButtons(locationsData) {
   const buttonContainer = document.querySelector("#button-container");
+  buttonContainer.innerHTML = "";
   for (let i in locationsData) {
     const floorNumber = Number(i) + 1;
     const button = document.createElement("button");
@@ -184,7 +187,7 @@ async function setFloor(imageUrl, featureCollection) {
       }
       button.classList.add("active-button");
       currentFloor = floorNumber;
-      setFloor(locationsData[i].image, locationsData[i]);
+      setFloor(locationsData[i]);
     });
     buttonContainer.appendChild(button);
   }
