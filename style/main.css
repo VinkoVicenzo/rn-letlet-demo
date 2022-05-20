@@ -44,7 +44,12 @@ form button{
 
 #shopping-form{
   z-index: 800;
-  width: 200px;
   margin-right: 30px;
   margin-top: 10px;
+}
+
+#shopping-id {
+  width: 200px;
+  height: 40px;
+  border-radius: 5px;
 }
