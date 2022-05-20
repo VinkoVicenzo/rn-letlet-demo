@@ -1,3 +1,24 @@
+async function getSelectedShoppingId() {
+  var select = document.querySelector("#shopping-id");
+  var optionValue = select.options[select.selectedIndex];
+  var shopping_id = optionValue.id;
+  console.log(shopping_id);
+
+  const { data } = await getShoppingDataByID(shopping_id);
+  console.log(data);
+  locationsData = data;
+  setFloor(locationsData[0].image, locationsData[0])
+}
+
+let getShoppingDataByID = async (shopping_id) => {
+  const URL = "https://shopping-json-map.herokuapp.com/shoppings";
+  const response = await fetch(`${URL}/${shopping_id}`);
+  const data = await response.json();
+  return data;
+};
+
+let locationsData = [];
+
 const DEFAULT_ZOOM_LEVEL = 9;
 
 let currentFloor = "nenhum";
@@ -143,23 +164,23 @@ async function setFloor(imageUrl, featureCollection) {
   geojson.addTo(map);
 
   map.flyTo(floorImageOverlay.getCenter(), DEFAULT_ZOOM_LEVEL);
-}
 
-const buttonContainer = document.querySelector("#button-container");
-for (let i in locationsData) {
-  const floorNumber = Number(i) + 1;
-  const button = document.createElement("button");
-  button.id = `floor-${floorNumber}-btn`;
-  button.textContent = floorNumber;
-  button.addEventListener("click", (e) => {
-    e.preventDefault();
-    for (let i = 0; i < buttonContainer.children.length; i++) {
-      const child = buttonContainer.children[i];
-      child.classList.remove("active-button");
-    }
-    button.classList.add("active-button");
-    currentFloor = floorNumber;
-    setFloor(locationsData[i].image, locationsData[i]);
-  });
-  buttonContainer.appendChild(button);
+  const buttonContainer = document.querySelector("#button-container");
+  for (let i in locationsData) {
+    const floorNumber = Number(i) + 1;
+    const button = document.createElement("button");
+    button.id = `floor-${floorNumber}-btn`;
+    button.textContent = floorNumber;
+    button.addEventListener("click", (e) => {
+      e.preventDefault();
+      for (let i = 0; i < buttonContainer.children.length; i++) {
+        const child = buttonContainer.children[i];
+        child.classList.remove("active-button");
+      }
+      button.classList.add("active-button");
+      currentFloor = floorNumber;
+      setFloor(locationsData[i].image, locationsData[i]);
+    });
+    buttonContainer.appendChild(button);
+  }
 }
