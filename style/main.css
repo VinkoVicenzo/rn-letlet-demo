@@ -34,4 +34,23 @@ form button{
   width: 60px;
   height: 40px;
   border: 1px solid black;
+  background-color: white;
+}
+
+#select-shopping{
+  width: 100%; 
+  display: flex;
+  flex-direction: row-reverse ;
+}
+
+#shopping-form{
+  z-index: 800;
+  margin-right: 30px;
+  margin-top: 10px;
+}
+
+#shopping-id {
+  width: 200px;
+  height: 40px;
+  border-radius: 5px;
 }
