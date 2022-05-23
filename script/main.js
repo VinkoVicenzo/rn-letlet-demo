@@ -9,6 +9,7 @@ async function getSelectedShoppingId() {
 
   setChangeFloorButtons(data);
   setFloor(data[0]);
+  currentFloor = 0;
 }
 
 let getShoppingDataByID = async (shopping_id) => {
