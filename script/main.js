@@ -187,3 +187,5 @@ function setChangeFloorButtons(locationsData) {
     buttonContainer.appendChild(button);
   }
 }
+
+setFloor(locationsData[0].image, locationsData[0]);
