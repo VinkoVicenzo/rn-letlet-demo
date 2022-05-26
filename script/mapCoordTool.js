@@ -1,65 +1,38 @@
-class Mapper {
-  constructor() {
-    this._coords = [];
-    this._isMapping = false;
-    this._features = [];
+class IdFeatureMapList {
+  constructor(list) {
+    this._list = list;
+    this._lookup = Object.fromEntries(this._list.map(({ id }, i) => [id, i]));
   }
 
-  static featureTemplate = (name, coords) => ({
-    type: "Feature",
-    properties: {
-      name,
-      openTime: {
-        open: 510,
-        close: 1230,
-      },
-    },
-    geometry: {
-      type: "Polygon",
-      coordinates: [coords],
-    },
-  });
+  _addToLookup = (id) =>
+    !this.has(id) && (this._lookup[id] = this._list.length);
 
-  _startMapping() {
-    this._coords.length = 0;
-  }
+  has = (id) => id in this._lookup;
 
-  _stopMapping() {
-    const name = "";
-    const newFeature = Mapper.featureTemplate(name, [...this._coords]);
-    this._features.push(newFeature);
-  }
+  getIdFeatureMap = (id) => this.has(id) && this._list[this._lookup[id]];
 
-  addCoord(newCoord) {
-    this._coords.push(newCoord);
-  }
+  add = (id, suc) =>
+    (this._list[this.has(id) ? this._lookup[id] : this._addToLookup(id)] = {
+      id,
+      suc,
+    });
 
-  get lastFeature() {
-    return this._features[this._features.length - 1];
-  }
-
-  get features() {
-    return this._features;
-  }
-
-  switch() {
-    this._isMapping ? this._stopMapping() : this._startMapping();
-    this._isMapping = !this._isMapping;
+  get list() {
+    return this._list;
   }
 }
 
-const mapper = new Mapper();
+const KEY_LIST = "list-key";
+const idFeatureMapList = new IdFeatureMapList(
+  JSON.parse(localStorage.getItem(KEY_LIST)) ?? []
+);
 
-map.addEventListener("contextmenu", ({ latlng: { lat, lng } }) => {
-  mapper.addCoord([lng, lat]);
-});
-
-document.addEventListener("keydown", ({ key }) => {
-  console.log(key);
-  const action = {
-    s: () => mapper.switch(),
-    c: () => navigator.clipboard.writeText(JSON.stringify(mapper.lastFeature)),
-    a: () => navigator.clipboard.writeText(JSON.stringify(mapper.features)),
-  };
-  action[key]?.();
-});
+document.addEventListener(
+  "keydown",
+  ({ key }) =>
+    !console.log("keydown:", key) &&
+    {
+      c: () =>
+        navigator.clipboard.writeText(JSON.stringify(idFeatureMapList.list)),
+    }[key]?.()
+);

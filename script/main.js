@@ -2,14 +2,11 @@ async function getSelectedShoppingId() {
   var select = document.querySelector("#shopping-id");
   var optionValue = select.options[select.selectedIndex];
   var shopping_id = optionValue.id;
-  console.log(shopping_id);
-
   const { data } = await getShoppingDataByID(shopping_id);
-  console.log(data);
+  console.log("loaded shopping: ", { shopping_id, data });
 
   setChangeFloorButtons(data);
   setFloor(data[0]);
-  currentFloor = 0;
 }
 
 let getShoppingDataByID = async (shopping_id) => {
@@ -21,20 +18,6 @@ let getShoppingDataByID = async (shopping_id) => {
 
 const DEFAULT_ZOOM_LEVEL = 9;
 
-let currentFloor = "nenhum";
-
-function isOpen({ close, open }) {
-  const currentDate = new Date();
-  const currentTime = currentDate.getHours() * 60 + currentDate.getMinutes();
-  return open <= currentTime && currentTime < close;
-}
-
-function minutesToHoursMinutes(rawMinutes) {
-  const hours = Math.floor(rawMinutes / 60);
-  const minutes = rawMinutes % 60;
-  return `${hours}:${minutes}`;
-}
-
 var map = L.map("map", {
   minZoom: 9,
   maxZoom: 12,
@@ -42,18 +25,6 @@ var map = L.map("map", {
   zoom: DEFAULT_ZOOM_LEVEL,
   crs: L.CRS.Simple,
 });
-
-function popupMessage(name, openTime, floorLevel) {
-  const floorText = `<h3>Andar atual: ${floorLevel} </h3>`;
-  const storeText = `<h3>${name || "Loja sem nome"}</h3>`;
-  const openTimeText = `<h3>${
-    isOpen(openTime)
-      ? `Aberto</h3><h3>Fecha as ${minutesToHoursMinutes(openTime.close)}</h3>`
-      : `Fechado</h3><h3>Abre as ${minutesToHoursMinutes(openTime.open)}</h3>`
-  }`;
-
-  return floorText + storeText + openTimeText;
-}
 
 function getImageSize(imageUrl) {
   return new Promise((resolve) => {
@@ -65,6 +36,13 @@ function getImageSize(imageUrl) {
         height: image.height,
       });
   });
+}
+
+//
+
+function popupMessage(id) {
+  const suc = idFeatureMapList.getIdFeatureMap(id)?.suc;
+  return `<h4>id: ${id}</h4><h4>suc: ${suc ?? "loja não mapeada"}</h4>`;
 }
 
 async function setFloor(featureCollection) {
@@ -79,79 +57,46 @@ async function setFloor(featureCollection) {
 
   const floorImageOverlay = L.imageOverlay(imageUrl, bounds);
 
-  function getOpenColor(openTime) {
-    return isOpen(openTime) ? "#0f0" : "#f00";
-  }
-
   function zoomToFeatureAndShowPopup(e) {
-    const {
-      _northEast: { lat: neLat, lng: neLng },
-      _southWest: { lat: swLat, lng: swLng },
-    } = e.target.getBounds();
-
-    const bounds = new L.LatLngBounds([
-      [neLat, neLng].map((c) => c + 0.025),
-      [swLat, swLng].map((c) => c - 0.025),
-    ]);
-
-    map.fitBounds(bounds);
-
-    // Mostra o popup após 0.25s
-    // Set timeout é necessário para
-    // não cortar a animação do fitBounds que dura 0.25s
-    setTimeout(() => {
-      const marker = e.target.feature.marker;
-      marker.openPopup();
-    }, 250);
-  }
-
-  function resetHighlight(e) {
-    geojson.resetStyle(e.target);
-  }
-
-  function highlightFeature(e) {
-    const layer = e.target;
-    const openColor = getOpenColor(layer.feature.properties.openTime);
-    layer.setStyle({
-      weight: 1,
-      opacity: 1,
-      color: openColor,
-      fillColor: openColor,
-      fillOpacity: 0.4,
-    });
-
-    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-      layer.bringToFront();
-    }
+    (() => {
+      const id = e.target.feature.properties.name;
+      if (idFeatureMapList.has(id)) {
+        const oldSuc = idFeatureMapList.getIdFeatureMap(id)?.suc;
+        const promptResponse = prompt(
+          `lojá já tem um suc: ${oldSuc}\nDeseja continuar?`
+        );
+        if (promptResponse[0].toUpperCase() !== "S") return;
+      }
+      const suc = prompt("suc: ");
+      idFeatureMapList.add(id, suc);
+      localStorage.setItem(KEY_LIST, JSON.stringify(idFeatureMapList.list));
+    })();
+    setFloor(featureCollection);
   }
 
   function addMarker(e) {
     const center = e.target.getCenter();
     const marker = new L.marker(center);
-    marker.bindPopup(
-      popupMessage(
-        e.target.feature.properties.name,
-        e.target.feature.properties.openTime,
-        currentFloor
-      )
-    );
+    marker.bindPopup(popupMessage(e.target.feature.properties.name));
     marker.addTo(map);
     e.target.feature.marker = marker;
   }
 
-  function onEachFeature(feature, layer) {
+  function onEachFeature(_feature, layer) {
     layer.on({
-      mouseover: highlightFeature,
-      mouseout: resetHighlight,
       click: zoomToFeatureAndShowPopup,
       add: addMarker,
     });
   }
 
   function style(feature) {
+    const id = feature.properties.name;
+    const mapped = idFeatureMapList.has(id);
     return {
-      opacity: 0,
-      fillOpacity: 0,
+      weight: 0,
+      opacity: 1,
+      fillOpacity: 0.4,
+      fillColor: mapped ? "#0f0" : "#f00",
     };
   }
 
@@ -162,8 +107,6 @@ async function setFloor(featureCollection) {
 
   floorImageOverlay.addTo(map);
   geojson.addTo(map);
-
-  map.flyTo(floorImageOverlay.getCenter(), DEFAULT_ZOOM_LEVEL);
 }
 
 function setChangeFloorButtons(locationsData) {
@@ -181,7 +124,6 @@ function setChangeFloorButtons(locationsData) {
         child.classList.remove("active-button");
       }
       button.classList.add("active-button");
-      currentFloor = floorNumber;
       setFloor(locationsData[i]);
     });
     buttonContainer.appendChild(button);
