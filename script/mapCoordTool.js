@@ -34,5 +34,9 @@ document.addEventListener(
     {
       c: () =>
         navigator.clipboard.writeText(JSON.stringify(idFeatureMapList.list)),
+      r: () => {
+        localStorage.setItem(KEY_LIST, JSON.stringify([]));
+        location.reload(true);
+      },
     }[key]?.()
 );
