@@ -26,22 +26,29 @@
   </head>
   <body>
     <div id="map">
-      <div id="select-shopping">
-        <form id="shopping-form">
-          <select id="shopping-id" onChange="getSelectedShoppingId()">
-            <option id="1">Assis Brasil</option>
-            <option id="2">Center Lar</option>
-            <option id="3">Ipiranga</option>
-            <option id="4">Novo Hamburgo</option>
-            <option id="5">Wallig</option>
-            <option id="6">São Leopoldo</option>
-            <option id="7">Moinhos</option>
-            <option id="8">San Pellegrino</option>
-            <option id="9">Country</option>
-            <option id="10">São Paulo</option>
-          </select>
-        </form>
+      <div id="screen">
+        <div id="select-shopping">
+          <form id="shopping-form">
+            <select id="shopping-id" onChange="getSelectedShoppingId()">
+              <option id="1">Assis Brasil</option>
+              <option id="2">Center Lar</option>
+              <option id="3">Ipiranga</option>
+              <option id="4">Novo Hamburgo</option>
+              <option id="5">Wallig</option>
+              <option id="6">São Leopoldo</option>
+              <option id="7">Moinhos</option>
+              <option id="8">San Pellegrino</option>
+              <option id="9">Country</option>
+              <option id="10">São Paulo</option>
+            </select>
+          </form>
+        </div>
+        <div id="loadingScreen">
+          <span class="loadingText">CARREGANDO</span>
+          <div class="c-loader"></div>
+        </div>
       </div>
+
       <div id="floor-layers">
         <form id="button-container"></form>
       </div>

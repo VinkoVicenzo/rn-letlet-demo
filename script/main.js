@@ -6,10 +6,22 @@ async function getSelectedShoppingId() {
 
   const { data } = await getShoppingDataByID(shopping_id);
   console.log(data);
+  loadingOn();
+  
 
   setChangeFloorButtons(data);
   setFloor(data[0]);
   currentFloor = 1;
+}
+
+function loadingOn(){
+  let loadingScreen = document.getElementById("loadingScreen");
+  loadingScreen.style.display = "flex";
+}
+
+function loadingOff(){
+  let loadingScreen = document.getElementById("loadingScreen");
+  loadingScreen.style.display = "none";
 }
 
 let getShoppingDataByID = async (shopping_id) => {
@@ -71,6 +83,7 @@ async function setFloor(featureCollection) {
   const { image: imageUrl } = featureCollection;
   map.eachLayer((layer) => layer.removeFrom(map));
 
+  //
   const { width, height } = await getImageSize(imageUrl);
 
   const southWest = [0, 1];
@@ -160,6 +173,8 @@ async function setFloor(featureCollection) {
     onEachFeature,
   });
 
+
+  loadingOff();
   floorImageOverlay.addTo(map);
   geojson.addTo(map);
 
