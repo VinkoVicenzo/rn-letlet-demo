@@ -173,7 +173,6 @@ async function setFloor(featureCollection) {
     onEachFeature,
   });
 
-
   loadingOff();
   floorImageOverlay.addTo(map);
   geojson.addTo(map);
@@ -195,6 +194,7 @@ function setChangeFloorButtons(locationsData) {
         const child = buttonContainer.children[i];
         child.classList.remove("active-button");
       }
+      loadingOn();
       button.classList.add("active-button");
       currentFloor = floorNumber;
       setFloor(locationsData[i]);
