@@ -7,19 +7,18 @@ async function getSelectedShoppingId() {
   const { data } = await getShoppingDataByID(shopping_id);
   console.log(data);
   loadingOn();
-  
 
   setChangeFloorButtons(data);
   setFloor(data[0]);
   currentFloor = 1;
 }
 
-function loadingOn(){
+function loadingOn() {
   let loadingScreen = document.getElementById("loadingScreen");
   loadingScreen.style.display = "flex";
 }
 
-function loadingOff(){
+function loadingOff() {
   let loadingScreen = document.getElementById("loadingScreen");
   loadingScreen.style.display = "none";
 }
@@ -83,7 +82,6 @@ async function setFloor(featureCollection) {
   const { image: imageUrl } = featureCollection;
   map.eachLayer((layer) => layer.removeFrom(map));
 
-  //
   const { width, height } = await getImageSize(imageUrl);
 
   const southWest = [0, 1];
@@ -150,6 +148,12 @@ async function setFloor(featureCollection) {
     );
     marker.addTo(map);
     e.target.feature.marker = marker;
+    if (e.target.feature.properties.highlight) {
+      highlightFeature(e);
+      setTimeout(() => {
+        zoomToFeatureAndShowPopup(e);
+      }, 0.5);
+    }
   }
 
   function onEachFeature(feature, layer) {
@@ -202,3 +206,24 @@ function setChangeFloorButtons(locationsData) {
     buttonContainer.appendChild(button);
   }
 }
+
+(async () => {
+  const url = window.location.href;
+  const rawStringParams = url.split("?");
+  if (rawStringParams.length < 2) return; // Não há parâmetros
+  const params = Object.fromEntries(
+    rawStringParams[1].split("&").map((s) => s.split("=")) // Separa os múltiplos params
+  );
+  const { UE, SUC } = params;
+  const { data } = await getShoppingDataByID(UE);
+  const floorIndex = data.findIndex(({ features }) =>
+    features.some((store) => {
+      if (store.properties.suc == SUC) {
+        store.properties.highlight = true;
+        return true;
+      }
+    })
+  );
+  // TODO: se não houver parametro "suc" mostrar o primeiro andar (index: 0)
+  setFloor(data[floorIndex]);
+})();
