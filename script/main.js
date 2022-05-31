@@ -215,7 +215,7 @@ function setChangeFloorButtons(locationsData) {
     rawStringParams[1].split("&").map((s) => s.split("=")) // Separa os múltiplos params
   );
   const { UE, SUC } = params;
-  const { data } = await getShoppingDataByID(UE);
+  const { data, name } = await getShoppingDataByID(UE);
   const floorIndex = data.findIndex(({ features }) =>
     features.some((store) => {
       if (store.properties.suc == SUC) {
@@ -225,5 +225,6 @@ function setChangeFloorButtons(locationsData) {
     })
   );
   // TODO: se não houver parametro "suc" mostrar o primeiro andar (index: 0)
+  document.querySelector("#shopping-id").value = name;
   setFloor(data[floorIndex]);
 })();
