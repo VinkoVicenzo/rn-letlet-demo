@@ -1,3 +1,5 @@
+
+
 async function getSelectedShoppingId() {
   var select = document.querySelector("#shopping-id");
   var optionValue = select.options[select.selectedIndex];
@@ -7,6 +9,7 @@ async function getSelectedShoppingId() {
   const { data } = await getShoppingDataByID(shopping_id);
   console.log(data);
   loadingOn();
+  window.history.pushState("", "", "/");
 
   setChangeFloorButtons(data);
   setFloor(data[0]);
@@ -63,7 +66,7 @@ function popupMessage(name, openTime, floorLevel) {
       : `Fechado</h3><h3>Abre as ${minutesToHoursMinutes(openTime.open)}</h3>`
   }`;
 
-  return floorText + storeText + openTimeText;
+  return /*floorText +*/   storeText + openTimeText;
 }
 
 function getImageSize(imageUrl) {
@@ -106,7 +109,6 @@ async function setFloor(featureCollection) {
     ]);
 
     map.fitBounds(bounds);
-
     // Mostra o popup após 0.25s
     // Set timeout é necessário para
     // não cortar a animação do fitBounds que dura 0.25s
@@ -199,6 +201,7 @@ function setChangeFloorButtons(locationsData) {
         child.classList.remove("active-button");
       }
       loadingOn();
+      window.history.pushState("", "", "/");
       button.classList.add("active-button");
       currentFloor = floorNumber;
       setFloor(locationsData[i]);
@@ -224,6 +227,9 @@ function setChangeFloorButtons(locationsData) {
       }
     })
   );
+
+  window.history.pushState("", "", "/");
+  setChangeFloorButtons(data);
   // TODO: se não houver parametro "suc" mostrar o primeiro andar (index: 0)
   document.querySelector("#shopping-id").value = name;
   setFloor(data[floorIndex]);
