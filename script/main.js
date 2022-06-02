@@ -9,7 +9,6 @@ async function getSelectedShoppingId() {
   const { data } = await getShoppingDataByID(shopping_id);
   console.log(data);
   loadingOn();
-  window.history.pushState("", "", "#");
 
   setChangeFloorButtons(data);
   setFloor(data[0]);
@@ -201,7 +200,7 @@ function setChangeFloorButtons(locationsData) {
         child.classList.remove("active-button");
       }
       loadingOn();
-      window.history.pushState("", "", "#");
+
       button.classList.add("active-button");
       currentFloor = floorNumber;
       setFloor(locationsData[i]);
@@ -228,7 +227,6 @@ function setChangeFloorButtons(locationsData) {
     })
   );
 
-  window.history.pushState("", "", "#");
   setChangeFloorButtons(data);
   // TODO: se não houver parametro "suc" mostrar o primeiro andar (index: 0)
   document.querySelector("#shopping-id").value = name;
