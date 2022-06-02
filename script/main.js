@@ -209,7 +209,7 @@ function setChangeFloorButtons(locationsData) {
     buttonContainer.appendChild(button);
   }
 }
-
+window.history.pushState("", "", "#");
 (async () => {
   const url = window.location.href;
   const rawStringParams = url.split("?");
