@@ -228,7 +228,7 @@ function setChangeFloorButtons(locationsData) {
     })
   );
 
-  window.history.pushState("", "", "/");
+  window.history.pushState("", "", "#");
   setChangeFloorButtons(data);
   // TODO: se não houver parametro "suc" mostrar o primeiro andar (index: 0)
   document.querySelector("#shopping-id").value = name;
