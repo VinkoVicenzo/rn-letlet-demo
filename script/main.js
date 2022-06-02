@@ -9,7 +9,7 @@ async function getSelectedShoppingId() {
   const { data } = await getShoppingDataByID(shopping_id);
   console.log(data);
   loadingOn();
-  window.history.pushState("", "", "/");
+  window.history.pushState("", "", "#");
 
   setChangeFloorButtons(data);
   setFloor(data[0]);
@@ -201,7 +201,7 @@ function setChangeFloorButtons(locationsData) {
         child.classList.remove("active-button");
       }
       loadingOn();
-      window.history.pushState("", "", "/");
+      window.history.pushState("", "", "#");
       button.classList.add("active-button");
       currentFloor = floorNumber;
       setFloor(locationsData[i]);
@@ -209,7 +209,7 @@ function setChangeFloorButtons(locationsData) {
     buttonContainer.appendChild(button);
   }
 }
-window.history.pushState("", "", "#");
+
 (async () => {
   const url = window.location.href;
   const rawStringParams = url.split("?");
