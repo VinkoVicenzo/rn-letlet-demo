@@ -1,5 +1,3 @@
-
-
 async function getSelectedShoppingId() {
   var select = document.querySelector("#shopping-id");
   var optionValue = select.options[select.selectedIndex];
@@ -122,6 +120,7 @@ async function setFloor(featureCollection) {
   }
 
   function highlightFeature(e) {
+    window.history.pushState("", "", "?");
     const layer = e.target;
     const openColor = getOpenColor(layer.feature.properties.openTime);
     layer.setStyle({
